@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>情侣专属英语单词打卡</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pink: { 500: "#FF9AA2" },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Varela Round", sans-serif;
+      background: #FFF5F5 url("https://img1.baidu.com/it/u=1896324522,3432545423&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800") center/cover fixed;
+      padding-bottom: 40px;
+    }
+    .card {
+      background: rgba(255,255,255,0.92);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(255,154,162,0.25);
+    }
+    .btn-pink {
+      background: #FF9AA2;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 99px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-pink:hover { background: #fc8181; }
+    .calendar-day { cursor: pointer; }
+    .badge-item { cursor: pointer; }
+    .game-card { cursor: pointer; }
+  </style>
+</head>
+<body>
+<!-- 导航 -->
+<nav class="bg-pink-500 text-white px-4 py-3 flex justify-between items-center">
+  <div class="flex items-center gap-2">
+    <span class="text-xl font-bold">💖情侣专属英语打卡</span>
+  </div>
+  <div class="flex items-center gap-3">
+    <span class="bg-white text-pink-500 px-3 py-1 rounded-full text-sm">Lv.1 单词新手</span>
+    <button id="adminOpen" class="bg-white text-pink-500 px-4 py-2 rounded-full">管理员入口</button>
+  </div>
+</nav>
+
+<div class="max-w-4xl mx-auto px-4 mt-8">
+  <!-- 欢迎 -->
+  <div class="card text-center">
+    <div class="flex justify-center items-center gap-4 mb-4">
+      <div class="w-14 h-14 rounded-full bg-pink-200 flex items-center justify-center text-xl">蓉</div>
+      <span class="text-2xl text-pink-500 animate-pulse">❤️</span>
+      <div class="w-14 h-14 rounded-full bg-blue-200 flex items-center justify-center text-xl">龙</div>
+    </div>
+    <h1 class="text-2xl md:text-3xl font-bold text-pink-500 mb-3">大猪蹄子董海龙给无敌聪明漂亮宝宝景亚蓉的专属打卡系统</h1>
+    <p class="text-pink-400 mb-3">每天坚持，记录我们的爱情与进步 💖</p>
+    <div class="bg-pink-100 inline-block px-4 py-2 rounded-full text-sm mb-3" id="nowTime"></div>
+    <div class="bg-pink-50 px-4 py-2 rounded-lg mt-2 inline-block" id="tipText">每一个坚持的日子都值得被记住！</div>
+  </div>
+
+  <!-- 上传区 -->
+  <div class="card">
+    <h2 class="text-xl font-bold text-pink-500 text-center mb-4">上传单词背诵截图</h2>
+    <div id="uploadBox" class="border-2 border-dashed border-pink-300 rounded-xl p-8 text-center hover:bg-pink-50 transition">
+      <i class="fa fa-cloud-upload text-4xl text-pink-400 mb-2"></i>
+      <p class="text-pink-500">点击上传 / 拖拽图片到这里</p>
+      <input type="file" id="fileInput" class="hidden" accept="image/*" />
+    </div>
+    <div class="mt-4 text-center">
+      <button class="btn-pink w-full" id="uploadBtn">确认上传</button>
+    </div>
+  </div>
+
+  <!-- 情侣互动区 -->
+  <div class="card">
+    <h2 class="text-xl font-bold text-pink-500 text-center mb-4">💕 情侣互动区</h2>
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div class="bg-pink-50 p-4 rounded-xl">
+        <h3 class="font-bold text-pink-500 mb-2">今日任务</h3>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2"><input type="checkbox">背诵20个新单词</label>
+          <label class="flex items-center gap-2"><input type="checkbox">复习旧单词</label>
+          <label class="flex items-center gap-2"><input type="checkbox">听英语听力</label>
+        </div>
+      </div>
+      <div class="bg-blue-50 p-4 rounded-xl text-center">
+        <h3 class="font-bold text-pink-500 mb-2">连续打卡</h3>
+        <div class="text-3xl font-bold text-pink-500">3/30</div>
+        <div class="h-2 w-full bg-gray-200 rounded-full mt-2"><div class="h-full bg-pink-500 w-[10%] rounded-full"></div></div>
+      </div>
+    </div>
+    <div class="bg-gradient-to-r from-pink-50 to-blue-50 p-4 rounded-xl">
+      <h3 class="font-bold text-pink-500 mb-2">情侣留言板</h3>
+      <div class="space-y-2 mb-3">
+        <div class="bg-white p-2 rounded-lg text-sm">龙：宝宝辛苦啦，爱你~</div>
+        <div class="bg-white p-2 rounded-lg text-sm text-right">蓉：谢谢宝贝！我会加油的！</div>
+      </div>
+      <textarea class="w-full border border-pink-300 rounded-lg p-2" rows="2" placeholder="给对方留言..."></textarea>
+    </div>
+  </div>
+
+  <!-- 单词小游戏 -->
+  <div class="card">
+    <h2 class="text-xl font-bold text-pink-500 text-center mb-4">🎮 单词小游戏</h2>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-pink-100 p-4 rounded-xl text-center game-card" onclick="this.classList.toggle('bg-pink-200')">
+        <p class="font-bold">点击翻转记忆单词</p>
+        <p class="text-sm mt-2">ambiguous — 模糊的</p>
+      </div>
+      <div class="bg-purple-100 p-4 rounded-xl text-center">
+        <p class="font-bold">单词接龙</p>
+        <input class="border rounded px-2 w-20 text-center mt-2" placeholder="输入">
+      </div>
+    </div>
+  </div>
+
+  <!-- 徽章 -->
+  <div class="card">
+    <h2 class="text-xl font-bold text-pink-500 text-center mb-4">🏆 成就徽章</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="badge-item bg-pink-50 p-3 rounded-xl text-center" onclick="alert('初次打卡：完成第一次打卡')">
+        <div class="w-16 h-16 mx-auto bg-pink-200 rounded-full"></div>
+        <p class="text-sm mt-2 font-bold">初次打卡</p>
+      </div>
+      <div class="badge-item bg-pink-50 p-3 rounded-xl text-center" onclick="alert('连续7天：坚持一周')">
+        <div class="w-16 h-16 mx-auto bg-pink-200 rounded-full"></div>
+        <p class="text-sm mt-2 font-bold">连续7天</p>
+      </div>
+      <div class="badge-item bg-gray-100 p-3 rounded-xl text-center opacity-60">
+        <div class="w-16 h-16 mx-auto bg-gray-200 rounded-full"></div>
+        <p class="text-sm mt-2 font-bold">单词达人</p>
+      </div>
+      <div class="badge-item bg-gray-100 p-3 rounded-xl text-center opacity-60">
+        <div class="w-16 h-16 mx-auto bg-gray-200 rounded-full"></div>
+        <p class="text-sm mt-2 font-bold">爱情使者</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 打卡日历 -->
+  <div class="card">
+    <h2 class="text-xl font-bold text-pink-500 text-center mb-4">📅 打卡日历</h2>
+    <div class="grid grid-cols-7 gap-1 text-center text-sm">
+      <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+      <div class="calendar-day h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="this.classList.toggle('bg-pink-500','text-white')">21</div>
+      <div class="calendar-day h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="this.classList.toggle('bg-pink-500','text-white')">22</div>
+      <div class="calendar-day h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="this.classList.toggle('bg-pink-500','text-white')">23</div>
+      <div class="calendar-day h-8 flex items-center justify-center rounded-full hover:bg-pink-100">24</div>
+      <div class="calendar-day h-8 flex items-center justify-center rounded-full hover:bg-pink-100">25</div>
+      <div class="calendar-day h-8 flex items-center justify-center rounded-full hover:bg-pink-100">26</div>
+      <div class="calendar-day h-8 flex items-center justify-center rounded-full hover:bg-pink-100">27</div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 text-center">
+      <div><div class="text-2xl font-bold text-pink-500">3</div><div class="text-sm text-gray-500">总打卡</div></div>
+      <div><div class="text-2xl font-bold text-pink-500">3</div><div class="text-sm text-gray-500">连续打卡</div></div>
+      <div><div class="text-2xl font-bold text-pink-500">150</div><div class="text-sm text-gray-500">累计单词</div></div>
+      <div><div class="text-2xl font-bold text-pink-500">💖</div><div class="text-sm text-gray-500">爱情值</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 管理员弹窗 -->
+<div id="adminModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-2xl w-full max-w-sm">
+    <h3 class="text-xl font-bold text-pink-500 mb-4">管理员登录</h3>
+    <input type="text" id="adminUser" placeholder="账号 dhljyr" class="w-full border rounded-lg p-2 mb-3" />
+    <input type="password" id="adminPwd" placeholder="密码 03100504" class="w-full border rounded-lg p-2 mb-4" />
+    <div class="flex gap-2">
+      <button class="btn-pink flex-1" onclick="login()">登录</button>
+      <button class="bg-gray-200 rounded-lg px-4 py-2" onclick="closeModal()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// 时间
+function updateTime(){
+  const t=new Date();
+  document.getElementById("nowTime").innerText=t.toLocaleString("zh-CN",{year:"numeric",month:"long",day:"numeric",weekday:"long",hour:"2-digit",minute:"2-digit"});
+}
+updateTime();
+setInterval(updateTime,60000);
+
+// 上传
+const uploadBox=document.getElementById("uploadBox");
+const fileInput=document.getElementById("fileInput");
+uploadBox.onclick=()=>fileInput.click();
+
+// 管理员弹窗
+const modal=document.getElementById("adminModal");
+document.getElementById("adminOpen").onclick=()=>modal.classList.remove("hidden");
+function closeModal(){modal.classList.add("hidden");}
+function login(){
+  const u=document.getElementById("adminUser").value;
+  const p=document.getElementById("adminPwd").value;
+  if(u==="dhljyr"&&p==="03100504"){
+    alert("登录成功！");
+    window.location.href="admin.html";
+  }else alert("账号或密码错误");
+}
+</script>
+</body>
+</html>
