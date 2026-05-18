@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>情侣专属英语单词打卡</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { pink: { 500: "#FF9AA2" } },
+        },
+      },
+    };
+  </script>
+  <style>
+    * { pointer-events: auto !important; }
+    body {
+      font-family: "Varela Round", sans-serif;
+      background: #FFF5F5 url("https://img1.baidu.com/it/u=1896324522,3432545423&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800") center/cover fixed;
+      padding-bottom: 40px;
+    }
+    .card { background: rgba(255,255,255,0.92); border-radius: 20px; padding: 24px; margin-bottom: 24px; }
+    .btn-pink { background: #FF9AA2; color: white; padding: 10px 24px; border-radius: 99px; border: none; cursor: pointer !important; }
+    .btn-pink:hover { background: #fc8181; }
+    .clickable { cursor: pointer !important; }
+    .tip-box { background: #fef2f7; color: #db2777; padding:8px 12px; border-radius:8px; font-size:14px; margin-top:8px; }
+  </style>
+</head>
+<body>
+<nav class="bg-pink-500 text-white px-4 py-3 flex justify-between items-center">
+  <div class="flex items-center gap-2"><span class="text-xl font-bold">💖情侣专属英语打卡</span></div>
+  <div class="flex items-center gap-3">
+    <span class="bg-white text-pink-500 px-3 py-1 rounded-full text-sm">Lv.1 单词新手</span>
+    <button class="bg-white text-pink-500 px-4 py-2 rounded-full clickable" onclick="openAdminModal()">管理员入口</button>
+  </div>
+</nav>
+
+<div class="max-w-4xl mx-auto px-4 mt-8">
+  <div class="card text-center">
+    <div class="flex justify-center items-center gap-4 mb-4">
+      <div class="w-14 h-14 rounded-full bg-pink-200 flex items-center justify-center text-xl">蓉</div>
+      <span class="text-2xl text-pink-500 animate-pulse">❤️</span>
+      <div class="w-14 h-14 rounded-full bg-blue-200 flex items-center justify-center text-xl">龙</div>
+    </div>
+    <h1 class="text-2xl md:text-3xl font-bold text-pink-500 mb-3">大猪蹄子董海龙给无敌聪明漂亮宝宝景亚蓉的专属打卡系统</h1>
+    <p class="text-pink-400 mb-3">每天坚持，记录我们的爱情与进步 💖</p>
+    <div class="bg-pink-100 inline-block px-4 py-2 rounded-full text-sm mb-3" id="nowTime"></div>
+    <div class="bg-pink-50 px-4 py-2 rounded-lg mt-2 inline-block" id="tipText">每一个坚持的日子都值得被记住！</div>
+  </div>
+
+  <!-- 上传区 -->
+  <div class="card">
+    <h2 class="text-xl font-bold text-pink-500 text-center mb-4">上传单词背诵截图</h2>
+    <div id="uploadBox" class="border-2 border-dashed border-pink-300 rounded-xl p-8 text-center clickable" onclick="document.getElementById('fileInput').click()">
+      <i class="fa fa-cloud-upload text-4xl text-pink-400 mb-2"></i>
+      <p class="text-pink-500">点击上传 / 拖拽图片到这里</p>
+      <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="previewImg(this)" />
+      <p id="fileNameTip" class="text-sm text-gray-500 mt-2"></p>
+      <img id="previewShow" class="max-h-40 mx-auto mt-3 hidden rounded-lg">
+      <div id="uploadTip" class="tip-box hidden">请确认图片清晰，方便管理员审核~</div>
+    </div>
+    <div class="mt-4 text-center">
+      <button class="btn-pink w-full clickable" onclick="submitUpload()">确认上传</button>
+      <div id="submitTip" class="tip-box hidden mt-2"></div>
+    </div>
+  </div>
+
+  <!-- 情侣互动区（修改为30个单词 + 连续打卡联动） -->
+  <div class="card">
+    <h2 class="text-xl font-bold text-pink-500 text-center mb-4">💕 情侣互动区</h2>
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div class="bg-pink-50 p-4 rounded-xl">
+        <h3 class="font-bold text-pink-500 mb-2">今日任务</h3>
+        <div class="space-y-2">
+          <!-- 修改为：背诵30个以上新单词 -->
+          <label class="flex items-center gap-2 clickable"><input type="checkbox" onchange="taskCheck(this)">背诵30个以上新单词</label>
+          <label class="flex items-center gap-2 clickable"><input type="checkbox" onchange="taskCheck(this)">复习旧单词</label>
+          <label class="flex items-center gap-2 clickable"><input type="checkbox" onchange="taskCheck(this)">听英语听力</label>
+        </div>
+        <div id="taskTip" class="tip-box hidden mt-2">任务完成！爱情值+2</div>
+      </div>
+      <div class="bg-blue-50 p-4 rounded-xl text-center">
+        <h3 class="font-bold text-pink-500 mb-2">连续打卡</h3>
+        <!-- 动态显示打卡天数 -->
+        <div class="text-3xl font-bold text-pink-500" id="continueDays">0/30</div>
+        <div class="h-2 w-full bg-gray-200 rounded-full mt-2"><div id="progressBar" class="h-full bg-pink-500 w-[0%] rounded-full"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 打卡日历（联动连续打卡） -->
+  <div class="card">
+    <h2 class="text-xl font-bold text-pink-500 text-center mb-4">📅 打卡日历</h2>
+    <div class="grid grid-cols-7 gap-1 text-center text-sm">
+      <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+      <div class="clickable h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="checkCalendarDay(this)">21</div>
+      <div class="clickable h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="checkCalendarDay(this)">22</div>
+      <div class="clickable h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="checkCalendarDay(this)">23</div>
+      <div class="clickable h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="checkCalendarDay(this)">24</div>
+      <div class="clickable h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="checkCalendarDay(this)">25</div>
+      <div class="clickable h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="checkCalendarDay(this)">26</div>
+      <div class="clickable h-8 flex items-center justify-center rounded-full hover:bg-pink-100" onclick="checkCalendarDay(this)">27</div>
+    </div>
+    <div id="calendarTip" class="tip-box text-center hidden mt-3"></div>
+  </div>
+</div>
+
+<!-- 管理员弹窗 -->
+<div id="adminModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-2xl w-full max-w-sm">
+    <h3 class="text-xl font-bold text-pink-500 mb-4">管理员登录</h3>
+    <input type="text" id="adminUser" placeholder="账号 dhljyr" class="w-full border rounded-lg p-2 mb-3">
+    <input type="password" id="adminPwd" placeholder="密码 03100504" class="w-full border rounded-lg p-2 mb-4">
+    <div class="flex gap-2">
+      <button class="btn-pink flex-1" onclick="login()">登录</button>
+      <button class="bg-gray-200 rounded-lg px-4 py-2" onclick="closeModal()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// 时间
+function updateTime(){
+  const t=new Date();
+  document.getElementById("nowTime").innerText=t.toLocaleString("zh-CN",{year:"numeric",month:"long",day:"numeric",weekday:"long",hour:"2-digit",minute:"2-digit"});
+}
+updateTime();setInterval(updateTime,60000);
+
+// 预览图片+反馈
+let imgBase64 = "";
+function previewImg(input){
+  if(input.files[0]){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      imgBase64=e.target.result;
+      document.getElementById("previewShow").src=imgBase64;
+      document.getElementById("previewShow").classList.remove("hidden");
+      document.getElementById("fileNameTip").innerText="已选："+input.files[0].name;
+      document.getElementById("uploadTip").classList.remove("hidden");
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// 提交上传（强化反馈）
+function submitUpload(){
+  if(!imgBase64){
+    document.getElementById("submitTip").innerText="❌ 请先选择单词打卡截图！";
+    document.getElementById("submitTip").classList.remove("hidden");
+    return;
+  }
+  const list=JSON.parse(localStorage.getItem("checkinList"))||[];
+  list.push({
+    id:Date.now(),
+    img:imgBase64,
+    time:new Date().toLocaleString("zh-CN"),
+    status:"pending"
+  });
+  localStorage.setItem("checkinList",JSON.stringify(list));
+  document.getElementById("submitTip").innerText="✅ 上传成功！等待龙龙审核，爱情值+5！";
+  document.getElementById("submitTip").classList.remove("hidden");
+  setTimeout(()=>location.reload(),1500);
+}
+
+// 任务勾选反馈
+function taskCheck(box){
+  const tip=document.getElementById("taskTip");
+  if(box.checked) tip.classList.remove("hidden");
+  else tip.classList.add("hidden");
+}
+
+// 计算已打卡天数 + 更新连续打卡显示
+function updateContinueDays(){
+  const checkedDays = document.querySelectorAll('.calendar-day.bg-pink-500').length;
+  document.getElementById("continueDays").innerText = `${checkedDays}/30`;
+  // 更新进度条
+  const progress = (checkedDays / 30) * 100;
+  document.getElementById("progressBar").style.width = `${progress}%`;
+}
+
+// 日历打卡反馈（联动连续打卡）
+function checkCalendarDay(day){
+  day.classList.add("calendar-day"); // 标记为日历天数
+  day.classList.toggle("bg-pink-500");
+  day.classList.toggle("text-white");
+  const tip=document.getElementById("calendarTip");
+  if(day.classList.contains("bg-pink-500")){
+    tip.innerText="✅ 打卡成功！爱情值+1，今天也要努力背单词哦～";
+  }else{
+    tip.innerText="已取消当日打卡";
+  }
+  tip.classList.remove("hidden");
+  // 更新连续打卡数值
+  updateContinueDays();
+}
+
+// 初始化连续打卡数值
+window.onload = function(){
+  updateContinueDays();
+}
+
+// 管理员登录
+function openAdminModal(){document.getElementById("adminModal").classList.remove("hidden");}
+function closeModal(){document.getElementById("adminModal").classList.add("hidden");}
+function login(){
+  const u=document.getElementById("adminUser").value;
+  const p=document.getElementById("adminPwd").value;
+  if(u==="dhljyr"&&p==="03100504"){
+    alert("✅ 管理员登录成功！");
+    window.location.href="admin.html";
+  }else{
+    alert("❌ 账号或密码错误！");
+  }
+}
+</script>
+</body>
+</html>
